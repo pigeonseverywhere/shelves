@@ -1,55 +1,96 @@
 
 import prompts from "prompts";
 import type { PromptObject} from "prompts";
-import { finished, reading, success, toRead } from "../context.js";
-import {db } from "../database.js"
-// add command required info
+import {
+  Book,
+  error,
+  finished,
+  reading,
+  status,
+  success,
+  toRead,
+  warning,
+} from "../context.js";
+import { Shelf } from "../Shelf.js";
+
 const questions: PromptObject<string>[] = [
-    {
-      type: 'text',
-      name: 'title',
-      message: 'Title of the book'
-    },
-    {
-      type: 'text',
-      name: 'author',
-      message: 'Author of the book'
-    },
-    {
-      type: 'number',
-      name: 'isbn',
-      message: 'Enter the ISBN (optional)',
-      initial: '',
-      validate: isbn => (isbn.toString().match(/\d{13}/) || '') ? true: 'The ISBN should be 13 digits long'
-    },
-    {
-        type: 'select',
-        name: 'status',
-        message: 'Select book status',
-        choices: [
-            { title: toRead("To Read")},
-            { title: reading("Reading")},
-            { title: finished("Finished")}
-          ],
-    },
-    {
-        type: 'list',
-        name: 'tags',
-        message: 'Enter some tags',
-        initial: '',
-        separator: ','
+  {
+    type: "text",
+    name: "title",
+    message: "Title of the book",
+  },
+  {
+    type: "text",
+    name: "author",
+    message: "Author of the book",
+  },
+  {
+    type: "text",
+    name: "isbn",
+    message: "Enter the ISBN",
+    initial: "",
+    validate: (isbn) =>
+      isbn.match(/\d{13}/) || isbn.match("")
+        ? true
+        : "The ISBN should be 13 digits long",
+  },
+  {
+    type: "select",
+    name: "status",
+    message: "Select book status",
+    choices: [
+      { title: toRead(status.toRead), value: status.toRead },
+      { title: reading(status.reading), value: status.reading },
+      { title: finished(status.finished), value: status.finished },
+    ],
+  },
+];
+
+export const add = async (shelf: Shelf) => {
+  const response = await prompts(questions);
+  response["pages"] = 0;
+  response["progress"] = 0;
+  response["rating"] = 0;
+  response["review"] = "";
+
+  shelf.db.get(
+    `SELECT *
+      FROM books 
+      WHERE isbn = ?`,
+    response.isbn,
+    (err, row: Book) => {
+      if (err) {
+        console.log(error("Cannot add book: ", err));
+      } else if (row) {
+        console.log(warning("Book already exists in your shelf!"));
+        console.log(`   
+        Title: ${row.title}
+        Author: ${row.author}
+        ISBN: ${row.isbn}
+        `);
+      } else {
+        executeAdd(<Book>response, shelf);
       }
-  ];
+    }
+  );
+};
 
+const bookExists = () => {};
+const executeAdd = (newBook: Book, shelf: Shelf) => {
+  const sql = `INSERT INTO books 
+                (${Object.keys(newBook).join(", ")}) 
+            VALUES 
+                (${Object.keys(newBook)
+                  .map((key) => "?")
+                  .join(", ")})`;
 
-export const add = async () => {
-    const response = await prompts(questions);
-    execute(response.title, response.author, response.isbn.toString(), response.status) 
-}
-
-export const execute = (title: string, author: string, isbn: string, status: string) => {
-    db.run("CREATE TABLE foo (num)");
-    console.log(success(`Successfully added ${title} to your collection!`))
-
-
-}
+  shelf.db.run(sql, Object.values(newBook), (err) => {
+    if (err) {
+      console.log(error(`Unable to add ${newBook.title} to your shelf: `, err));
+    } else {
+      console.log(
+        success(`Successfully added ${newBook.title} to your collection!`)
+      );
+    }
+  });
+};
