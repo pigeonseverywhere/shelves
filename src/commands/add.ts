@@ -13,6 +13,8 @@ import {
 } from "../context.js";
 import { Shelf } from "../Shelf.js";
 
+const shelf = new Shelf();
+
 const questions: PromptObject<string>[] = [
   {
     type: "text",
@@ -30,7 +32,7 @@ const questions: PromptObject<string>[] = [
     message: "Enter the ISBN",
     initial: "",
     validate: (isbn) =>
-      isbn.match(/\d{13}/) || isbn.match("")
+      isbn.match(/\d{13}/) || isbn.match(/^$/)
         ? true
         : "The ISBN should be 13 digits long",
   },
@@ -46,7 +48,7 @@ const questions: PromptObject<string>[] = [
   },
 ];
 
-export const add = async (shelf: Shelf) => {
+export const add = async () => {
   const response = await prompts(questions);
   response["pages"] = 0;
   response["progress"] = 0;
@@ -69,14 +71,14 @@ export const add = async (shelf: Shelf) => {
         ISBN: ${row.isbn}
         `);
       } else {
-        executeAdd(<Book>response, shelf);
+        executeAdd(<Book>response);
       }
     }
   );
 };
 
 const bookExists = () => {};
-const executeAdd = (newBook: Book, shelf: Shelf) => {
+const executeAdd = (newBook: Book) => {
   const sql = `INSERT INTO books 
                 (${Object.keys(newBook).join(", ")}) 
             VALUES 

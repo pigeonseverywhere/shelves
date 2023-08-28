@@ -3,7 +3,7 @@ import path from "path";
 
 /*============================ STYLING ==============================*/
 export const error = chalk.bold.red;
-export const warning = chalk.hex("#FFA500"); // Orange color
+export const warning = chalk.yellow; // Orange color
 export const success = chalk.greenBright;
 export const heading = chalk.bold.white;
 

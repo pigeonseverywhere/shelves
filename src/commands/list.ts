@@ -15,12 +15,13 @@ type options = {
   filter: string;
   verbose: boolean;
 };
+const shelf = new Shelf();
 
-export const list = (opts: options, shelf: Shelf) => {
+export const list = (opts: options) => {
   shelf.db.all(`SELECT * FROM books ORDER BY title`, executeList);
 };
 
-const executeList = (err: unknown, rows: Book[]) => {
+const executeList = (err: Error | null, rows: Book[]) => {
   if (err) {
     console.log(error("Cannot list books from shelf: ", err));
   } else {
@@ -34,11 +35,12 @@ const executeList = (err: unknown, rows: Book[]) => {
           ? toRead
           : finished;
 
-      console.log(`
-${statusStyle(statusIcon(row.status) + row.status)}     '${row.title}' by ${
-        row.author ? row.author : "Unknown"
-      }
-      `);
+      console.log(
+        `${statusStyle(statusIcon(row.status) + row.status)}     '${
+          row.title
+        }' by ${row.author ? row.author : "Unknown"} (ISBN: ${row.isbn})`
+      );
     });
   }
+  shelf.db.close();
 };
