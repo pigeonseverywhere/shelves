@@ -46,7 +46,7 @@ export class Shelf {
     const tags_sql = `
         CREATE TABLE IF NOT EXISTS tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        label TEXT 
+        label TEXT NOT NULL 
         )          
     `;
 
