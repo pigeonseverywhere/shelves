@@ -1,0 +1,52 @@
+{
+  "name": "shelves",
+  "version": "1.0.0",
+  "description": "A tracker for books you want to read, are reading, and finished reading",
+  "main": "./src/index.ts",
+  "type": "module",
+  "bin": {
+    "shelf": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node test.js",
+    "start:dev": "npx nodemon",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pigeonseverywhere/shelves.git"
+  },
+  "keywords": [
+    "tracker",
+    "book",
+    "list",
+    "reading"
+  ],
+  "author": "Yunshu Dai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pigeonseverywhere/shelves/issues"
+  },
+  "homepage": "https://github.com/pigeonseverywhere/shelves#readme",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cli-spinners": "^2.9.0",
+    "commander": "^11.0.0",
+    "figlet": "^1.6.0",
+    "inquirer": "^9.2.10",
+    "nanospinner": "^1.1.0",
+    "prompts": "^2.4.2",
+    "sqlite3": "^5.1.6",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.9",
+    "@types/prompts": "^2.4.4",
+    "@types/yargs": "^17.0.24",
+    "nodemon": "^3.0.1",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
