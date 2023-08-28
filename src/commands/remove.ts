@@ -51,10 +51,12 @@ const search = async (err: Error | null, rows: Book[]) => {
     };
     const response = await prompts(question);
     const confirm: PromptObject<string> = {
-      type: "confirm",
+      type: "toggle",
       name: "value",
       message: `Do you really want to remove ${response.select.title} from your shelf?`,
       initial: false,
+      active: "yes",
+      inactive: "no",
     };
     const confirmation = await prompts(confirm);
     if (confirmation.value) {

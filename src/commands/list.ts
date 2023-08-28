@@ -1,3 +1,4 @@
+import prompts, { PromptObject } from "prompts";
 import { Bookshelf } from "../Bookshelf.js";
 import {
   Book,
@@ -17,7 +18,27 @@ type options = {
 };
 const shelf = new Shelf();
 
-export const list = (opts: options) => {
+const questions: PromptObject<string>[] = [
+  {
+    type: "multiselect",
+    name: "filters",
+    message: "Filter by?",
+    choices: [
+      { title: "tags", value: "tags" },
+      { title: "status", value: "status" },
+      { title: "author", value: "author" },
+      { title: "title", value: "title" },
+    ],
+    max: 2,
+    hint: "- Space to select. Return to submit",
+  },
+];
+
+export const list = async (opts: options) => {
+  if (opts.filter) {
+    const response = await prompts(questions);
+    console.log(response.filters);
+  }
   shelf.db.all(`SELECT * FROM books ORDER BY title`, executeList);
 };
 
