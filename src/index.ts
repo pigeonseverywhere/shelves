@@ -5,15 +5,12 @@ import type { PromptObject} from "prompts";
 import { program } from "commander";
 import { add } from "./commands/add.js";
 import { list } from "./commands/list.js";
-import { Shelf } from "./Shelf.js";
+import { shelf } from "./Shelf.js";
 import { update } from "./commands/update.js";
 import { remove } from "./commands/remove.js";
 import { view } from "./commands/view.js";
 import { error, success } from "./context.js";
-
-// Ensure database is initialised
-const shelf = new Shelf();
-shelf.createTables();
+import { read } from "./commands/read.js";
 
 program.option("-v, --version").option("-h, --help");
 
@@ -37,21 +34,48 @@ program
 // TODO EVEYRHTING
 program
   .command("update")
+  .argument(
+    "<title>",
+    "title of book to update (please encluse multi-word titles in quotation marks)"
+  )
   .description("update information about a book on your shelf")
   .action(update);
 
 program
   .command("remove")
+  .argument(
+    "<title>",
+    "title of book to remove (please enclose multi-word titles in quotation marks"
+  )
   .description("remove a book from your shelf")
-  .action(remove);
+  .action((title) => remove(title));
 
 // TODO
 program
   .command("view")
+  .argument(
+    "<title>",
+    "title of book to view (please enclose multi-word titles in quotation marks)"
+  )
+  .option(
+    "-v, --verbose",
+    "show notes and bookmarks along with basic data",
+    false
+  )
   .description("view details of a book on your shelf")
-  .action(view);
+  .action((title, options) => {
+    view(title, options);
+  });
 
-program.command("read").description("start reading a book");
+program
+  .command("read")
+  .description(
+    "start reading a book by specifying a title (please enclose multi-word titles in quotes)"
+  )
+  .argument("<title>", "title of the book to start reading")
+  .action((title: string) => {
+    read(title);
+  });
 
 program
   .command("createtag <tag-label>")
@@ -68,3 +92,5 @@ program
 
 program.parse();
 const options = program.opts();
+
+// shelf.db.close();

@@ -11,9 +11,8 @@ import {
   toRead,
   warning,
 } from "../context.js";
-import { Shelf } from "../Shelf.js";
+import { shelf } from "../Shelf.js";
 
-const shelf = new Shelf();
 
 const questions: PromptObject<string>[] = [
   {

@@ -1,18 +1,23 @@
 import sqlite3, { Database } from "sqlite3";
-import path from "path";
 import { db_path, error } from "./context.js";
+import fs from "fs";
 
 export class Shelf {
   db: Database;
-  constructor() {
+  constructor(origin: string) {
+    let dbexist = false;
+    if (fs.existsSync(db_path)) dbexist = true;
+
     this.db = new sqlite3.Database(
       db_path,
       sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE | sqlite3.OPEN_URI,
       (err) => {
         if (err) {
           console.log(error("ERROR: ", err, db_path));
-        } else {
+        } else if (dbexist) {
+          // todo, skip create if file exists?
           this.createTables();
+          console.log("Initialising new Shelf Database at", db_path);
         }
       }
     );
@@ -85,3 +90,5 @@ export class Shelf {
     });
   };
 }
+
+export const shelf = new Shelf("shelf class");

@@ -9,9 +9,10 @@ import {
   statusIcon,
   toRead,
 } from "../context.js";
-import { Shelf } from "../Shelf.js";
+import { shelf } from "../Shelf.js";
 import boxen from "boxen";
 import chalk from "chalk";
+import { formatBook } from "./utility.js";
 
 type options = {
   filter: string;
@@ -23,8 +24,6 @@ type filterObject = {
   author?: string;
   title?: string;
 };
-
-const shelf = new Shelf();
 
 const tagFilter: PromptObject<string> = {
   type: "list",
@@ -104,9 +103,7 @@ export const list = async (opts: options) => {
       }
     }
     const conditions = Object.values(filter).join(" AND ");
-
     const sql = `SELECT * FROM books WHERE ${conditions}`;
-    console.log(sql);
     shelf.db.all(sql, executeList);
   } else {
     shelf.db.all(`SELECT * FROM books ORDER BY title`, executeList);
@@ -118,21 +115,7 @@ const executeList = (err: Error | null, rows: Book[]) => {
     console.log(error("Cannot list books from shelf: ", err));
   } else if (rows.length > 0) {
     console.log(heading("============= Books on your shelf ============="));
-
-    rows.forEach((row) => {
-      const statusStyle =
-        row.status === status.reading
-          ? reading
-          : row.status === status.toRead
-          ? toRead
-          : finished;
-
-      console.log(
-        `${statusStyle(statusIcon(row.status) + row.status)}     '${
-          row.title
-        }' by ${row.author ? row.author : "Unknown"} (ISBN: ${row.isbn})`
-      );
-    });
+    rows.forEach((book) => console.log(formatBook(book)));
   } else {
     console.log(heading("============= Books on your shelf ============="));
     console.log(
@@ -141,5 +124,4 @@ const executeList = (err: Error | null, rows: Book[]) => {
       )
     );
   }
-  shelf.db.close();
 };
