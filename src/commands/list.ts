@@ -108,6 +108,7 @@ export const list = async (opts: options) => {
   } else {
     shelf.db.all(`SELECT * FROM books ORDER BY title`, executeList);
   }
+  console.log();
 };
 
 const executeList = (err: Error | null, rows: Book[]) => {

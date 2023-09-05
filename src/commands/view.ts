@@ -1,7 +1,7 @@
 import prompts, { Choice } from "prompts";
 import { shelf } from "../Shelf.js";
-import { Book, error, warning } from "../context.js";
-import { formatBook, formatStatus } from "./utility.js";
+import { Book, error, status, warning } from "../context.js";
+import { formatBook, formatStatus, getReadingProgress } from "./utility.js";
 import chalk from "chalk";
 import boxen from "boxen";
 import cliProgress from "cli-progress";
@@ -42,32 +42,25 @@ export const view = async (title: string, options: options) => {
       }
     }
   );
+  console.log();
 };
 
 const executeView = async (book: Book) => {
-  const readingProgress = new cliProgress.SingleBar(
-    {
-      format: " {bar} | {value}/{total} pages",
-    },
-    cliProgress.Presets.rect
-  );
+  const readingProgress = getReadingProgress();
   // readingProgress.start(book.pages, book.progress);
 
   const displayText = `
+  ${chalk.bold.white("TITLE:")}    ${chalk.italic(book.title)}
   ${chalk.bold.white("AUTHOR:")}   ${chalk.italic(book.author)}
   ${chalk.bold.white("ISBN:")}     ${chalk.italic(book.isbn)}
   ${chalk.bold.white("STATUS:")}   ${formatStatus(book.status)}
-  ${chalk.bold.white("PROGRESS:")} ${book.progress}/${book.pages} pages
   ${chalk.bold.white("RATING:")}   ${book.rating === 0 ? "N/A" : book.rating} 
   ${chalk.bold.white("REVIEW:")}   ${book.review === "" ? "N/A" : book.review}
   `;
 
-  console.log(
-    boxen(displayText, {
-      padding: 1,
-      margin: 1,
-      title: chalk.white.bold(book.title),
-      titleAlignment: "center",
-    })
-  );
-};
+  console.log(displayText);
+  if (book.status === status.reading) {
+    readingProgress.start(book.pages, book.progress);
+    readingProgress.stop();
+  }
+};;
