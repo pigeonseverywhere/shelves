@@ -49,7 +49,6 @@ export const read = async (title: string) => {
           }
         }
       } else {
-        // TODO check books that have started reading, if exists, initiate reading loop or update page progress
         console.log(
           warning(`No books found on your shelf with '${title}' in the title`)
         );
@@ -100,21 +99,51 @@ const readingLoop = async (book: Book) => {
     },
   ];
   const readingProgress = getReadingProgress();
-  const onSubmit = (prompt: PromptObject, answer: any) => {
+  const onSubmit = (prompt: PromptObject, answer: any, answers: any) => {
     if (prompt.name === "action" && answer === "progress") {
       console.log(chalk.bold.white(`Current progress: `));
       readingProgress.start(book.pages, book.progress);
       readingProgress.stop();
-    }
-    if (prompt.name === "progress") {
+    } else if (prompt.name === "progress") {
       console.log(chalk.bold.white(`New progress: `));
       readingProgress.start(book.pages, book.progress);
       readingProgress.stop();
+      console.log("answer: ", answer);
+      shelf.db.run(
+        `UPDATE books SET progress=${answer} WHERE isbn='${book.isbn}'`,
+        (err: Error | null) => {
+          if (err) console.log(error(`ERROR updatng book progress: `, err));
+          else {
+            console.log(
+              success(`Successfully updated progress for ${book.title}`)
+            );
+          }
+        }
+      );
+    } else if (prompt.name === "bookmark" && answers.action === "bookmark") {
+      console.log("bookamrk selected: ", answers);
+      shelf.db.run(
+        `INSERT INTO notes (isbn, page, content) VALUES (${book.isbn}, ${answer}, "")`,
+        (err: Error | null) => {
+          if (err) console.log(error(`ERROR inserting bookmark: `, err));
+          else {
+            console.log(
+              success(
+                `Successfully added bookmark to ${book.title} on pqage ${answer}!`
+              )
+            );
+          }
+        }
+      );
+    } else if (prompt.name === "note") {
+      console.log("Notes selecred", answers);
     }
   };
 
   const response = await prompts(questions, { onSubmit });
   console.log("processing information obtained..");
+
+  // shelf.db.run("UPDATE");
 
   return response.action === "stop" ? false : true;
 };
@@ -177,58 +206,4 @@ const executeStartReading = async (book: Book) => {
       }
     }
   });
-};
-
-const executeKeepReading = async (book: Book) => {
-  const readingProgress = getReadingProgress();
-  console.log(chalk.bold.white(`Currently reading '${book.title}'`));
-
-  const questions: PromptObject<string>[] = [
-    {
-      type: "toggle",
-      name: "update",
-      message: "Update progress?",
-      initial: false,
-      active: "yes",
-      inactive: "no",
-    },
-    {
-      type: (prev) => (prev ? "number" : null),
-      name: "progress",
-      message: "Enter current page",
-      validate: (progress) =>
-        progress >= 0 && progress <= book.pages
-          ? true
-          : "Page cannot be negative or exceed total pages in book",
-      format: (value) => (book.progress = value),
-    },
-  ];
-  const onSubmit = (prompt: any, answer: any) => {
-    if (prompt.name === "update") {
-      console.log(chalk.bold.white(`Current progress: `));
-    } else {
-      console.log(chalk.bold.white(`Updated progress: `));
-    }
-    readingProgress.start(book.pages, book.progress);
-    readingProgress.stop();
-  };
-  const response = await prompts(questions, { onSubmit });
-
-  if (response.update)
-    shelf.db.exec(
-      `UPDATE books SET progress=${response.progress} WHERE isbn=${book.isbn}`,
-      (err: Error | null) => {
-        if (err) {
-          console.log(
-            error(`ERROR updating book progress for '${book.title}': `, err)
-          );
-        } else {
-          console.log(
-            success(
-              `Successfully updated reading progress for '${book.title}'!`
-            )
-          );
-        }
-      }
-    );
 };

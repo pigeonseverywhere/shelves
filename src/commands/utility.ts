@@ -3,6 +3,7 @@ import type { PromptObject} from "prompts";
 import { program } from "commander";
 import {
   Book,
+  error,
   finished,
   reading,
   status,
