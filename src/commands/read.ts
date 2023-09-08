@@ -121,7 +121,6 @@ const readingLoop = async (book: Book) => {
         }
       );
     } else if (prompt.name === "bookmark" && answers.action === "bookmark") {
-      console.log("bookamrk selected: ", answers);
       shelf.db.run(
         `INSERT INTO notes (isbn, page, content) VALUES (${book.isbn}, ${answer}, "")`,
         (err: Error | null) => {
@@ -129,22 +128,26 @@ const readingLoop = async (book: Book) => {
           else {
             console.log(
               success(
-                `Successfully added bookmark to ${book.title} on pqage ${answer}!`
+                `Successfully added bookmark to ${book.title} on page ${answer}!`
               )
             );
           }
         }
       );
     } else if (prompt.name === "note") {
-      console.log("Notes selecred", answers);
+      shelf.db.run(
+        `INSERT INTO notes (isbn, page, content) VALUES (${book.isbn}, ${answers.bookmark}, "${answer}")`,
+        (err: Error | null) => {
+          if (err) console.log(error(`ERROR inserting bookmark: `, err));
+          else {
+            console.log(success(`Successfully added a note to ${book.title}!`));
+          }
+        }
+      );
     }
   };
 
   const response = await prompts(questions, { onSubmit });
-  console.log("processing information obtained..");
-
-  // shelf.db.run("UPDATE");
-
   return response.action === "stop" ? false : true;
 };
 

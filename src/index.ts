@@ -12,6 +12,8 @@ import { view } from "./commands/view.js";
 import { error, success } from "./context.js";
 import { read } from "./commands/read.js";
 
+shelf.createTables();
+
 program.option("-v, --version").option("-h, --help");
 
 // TODO add tagging

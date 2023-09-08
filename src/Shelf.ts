@@ -14,10 +14,6 @@ export class Shelf {
       (err) => {
         if (err) {
           console.log(error("ERROR: ", err, db_path));
-        } else if (dbexist) {
-          // todo, skip create if file exists?
-          this.createTables();
-          console.log("Initialising new Shelf Database at", db_path);
         }
       }
     );
@@ -40,7 +36,7 @@ export class Shelf {
     const notes_sql = `
         CREATE TABLE IF NOT EXISTS notes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        isbn: STRING NOT NULL,
+        isbn STRING NOT NULL,
         page INTEGER,
         content TEXT,
         FOREIGN KEY (isbn) 
@@ -66,25 +62,26 @@ export class Shelf {
         PRIMARY KEY (book_id, tag_id) 
         )
     `;
+
     this.db.serialize(() => {
       this.db.run(books_sql, (err) => {
         if (err) {
-          console.log(error("ERROR: ", err));
+          console.log(error("ERROR creating books table: ", err));
         }
       });
       this.db.run(notes_sql, (err) => {
         if (err) {
-          console.log(error("ERROR: ", err));
+          console.log(error("ERROR creating notes table: ", err));
         }
       });
       this.db.run(tags_sql, (err) => {
         if (err) {
-          console.log(error("ERROR: ", err));
+          console.log(error("ERROR creating tags table: ", err));
         }
       });
       this.db.run(book_tags_sql, (err) => {
         if (err) {
-          console.log(error("ERROR: ", err));
+          console.log(error("ERROR creating book tags table: ", err));
         }
       });
     });
