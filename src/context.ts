@@ -37,6 +37,14 @@ export type Book = {
   review: string;
 };
 
+
+export type Note = {
+  isbn: string;
+  page: number;
+  content: string;
+};
+
+
 /*============================ SYSTEM ==============================*/
 export const root_dir = path.dirname(import.meta.url);
 export const db_path = root_dir + "/shelves.db";

@@ -26,7 +26,7 @@ export const update = (title: string) => {
         return;
       }
 
-      if (rows) {
+      if (rows.length !== 0) {
         const results: Choice[] = [];
         rows.forEach((row: Book) =>
           results.push({
@@ -40,11 +40,12 @@ export const update = (title: string) => {
           message: "Select the book to update",
           choices: results,
         });
-
         await executeUpdate(toUpdate.book);
       } else {
         console.log(
-          warning(`No books found on your shelf with '${title}' in the title`)
+          warning(
+            `No books found on your shelf with '${title}' in the title, please double check your spelling`
+          )
         );
       }
     }

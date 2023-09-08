@@ -9,9 +9,9 @@ import {
   toRead,
   warning,
 } from "../context.js";
-import cliProgress from "cli-progress";
 import { formatBook, getReadingProgress } from "./utility.js";
 import chalk from "chalk";
+import * as readline from "readline";
 
 export const read = async (title: string) => {
   shelf.db.all(
@@ -43,7 +43,10 @@ export const read = async (title: string) => {
         if (toRead.book.status === status.toRead) {
           await executeStartReading(toRead.book);
         } else {
-          await executeKeepReading(toRead.book);
+          let keepReading = await readingLoop(toRead.book);
+          while (keepReading.valueOf()) {
+            keepReading = await readingLoop(toRead.book);
+          }
         }
       } else {
         // TODO check books that have started reading, if exists, initiate reading loop or update page progress
@@ -54,6 +57,66 @@ export const read = async (title: string) => {
     }
   );
   console.log();
+};
+
+const readingLoop = async (book: Book) => {
+  const questions: PromptObject<string>[] = [
+    {
+      type: "select",
+      name: "action",
+      message: "What would you like to do?",
+      choices: [
+        { title: "Update page progress", value: "progress" },
+        { title: "Add bookmark", value: "bookmark" },
+        { title: "Add note", value: "note" },
+        { title: "Stop reading", value: "stop" },
+      ],
+    },
+    {
+      type: (prev, values) => (values.action === "progress" ? "number" : null),
+      name: "progress",
+      message: "Current page number: ",
+      validate: (progress) =>
+        progress >= 0 && progress <= book.pages
+          ? true
+          : "Page cannot be negative or exceed total pages in book",
+      format: (value) => (book.progress = value),
+    },
+    {
+      type: (prev, values) =>
+        values.action === "bookmark" || values.action === "note"
+          ? "number"
+          : null,
+      name: "bookmark",
+      message: (prev, values) =>
+        values.action === "bookmark"
+          ? "Enter page number to bookmark"
+          : "Enter page number of note (if applicable)",
+    },
+    {
+      type: (prev, values) => (values.action === "note" ? "text" : null),
+      name: "note",
+      message: "Enter notes",
+    },
+  ];
+  const readingProgress = getReadingProgress();
+  const onSubmit = (prompt: PromptObject, answer: any) => {
+    if (prompt.name === "action" && answer === "progress") {
+      console.log(chalk.bold.white(`Current progress: `));
+      readingProgress.start(book.pages, book.progress);
+      readingProgress.stop();
+    }
+    if (prompt.name === "progress") {
+      console.log(chalk.bold.white(`New progress: `));
+      readingProgress.start(book.pages, book.progress);
+      readingProgress.stop();
+    }
+  };
+
+  const response = await prompts(questions, { onSubmit });
+  console.log("processing information obtained..");
+
+  return response.action === "stop" ? false : true;
 };
 
 const executeStartReading = async (book: Book) => {
@@ -118,7 +181,7 @@ const executeStartReading = async (book: Book) => {
 
 const executeKeepReading = async (book: Book) => {
   const readingProgress = getReadingProgress();
-  console.log(chalk.bold.white(`Currently reading ${book.title}`));
+  console.log(chalk.bold.white(`Currently reading '${book.title}'`));
 
   const questions: PromptObject<string>[] = [
     {
@@ -157,11 +220,13 @@ const executeKeepReading = async (book: Book) => {
       (err: Error | null) => {
         if (err) {
           console.log(
-            error(`ERROR updating book progress for ${book.title}: `, err)
+            error(`ERROR updating book progress for '${book.title}': `, err)
           );
         } else {
           console.log(
-            success(`Successfully update reading progress for ${book.title}!`)
+            success(
+              `Successfully updated reading progress for '${book.title}'!`
+            )
           );
         }
       }

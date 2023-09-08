@@ -40,11 +40,11 @@ export class Shelf {
     const notes_sql = `
         CREATE TABLE IF NOT EXISTS notes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        book_id INTEGER NOT NULL,
+        isbn: STRING NOT NULL,
         page INTEGER,
         content TEXT,
-        FOREIGN KEY (book_id) 
-            REFERENCES books (id)
+        FOREIGN KEY (isbn) 
+            REFERENCES books (isbn)
         ) 
     `;
 
