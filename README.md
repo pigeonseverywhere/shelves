@@ -14,7 +14,7 @@ If you have the NodeJS runtime installed in your system, you can install the pac
 ```bash
 npm install -g shelves-cli
 ```
-Then you can use it with the keyword `shelf`. See the commands section for examples.
+Then you can use it with the keyword `shelves`. See the commands section for examples.
 
 ### homebrew
 
