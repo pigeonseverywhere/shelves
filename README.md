@@ -55,6 +55,7 @@ TODO
 ![shelf_view](https://github.com/pigeonseverywhere/shelves/assets/67492876/67a9fa84-c14d-4958-96ad-16748794a28d)
 
 When using the verbose flag:
+
 ![shelf_view_verbose](https://github.com/pigeonseverywhere/shelves/assets/67492876/cc11fccf-822b-47fb-84f2-b29b716c05b2)
 
 ### update
