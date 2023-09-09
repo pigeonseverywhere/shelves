@@ -108,7 +108,6 @@ export const list = async (opts: options) => {
   } else {
     shelf.db.all(`SELECT * FROM books ORDER BY title`, executeList);
   }
-  console.log();
 };
 
 const executeList = (err: Error | null, rows: Book[]) => {
@@ -117,6 +116,7 @@ const executeList = (err: Error | null, rows: Book[]) => {
   } else if (rows.length > 0) {
     console.log(heading("============= Books on your shelf ============="));
     rows.forEach((book) => console.log(formatBook(book)));
+    console.log("\n");
   } else {
     console.log(heading("============= Books on your shelf ============="));
     console.log(
@@ -124,5 +124,6 @@ const executeList = (err: Error | null, rows: Book[]) => {
         boxen("No books found!", { padding: 1, margin: { left: 11 } })
       )
     );
+    console.log("\n");
   }
 };
