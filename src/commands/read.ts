@@ -108,7 +108,6 @@ const readingLoop = async (book: Book) => {
       console.log(chalk.bold.white(`New progress: `));
       readingProgress.start(book.pages, book.progress);
       readingProgress.stop();
-      console.log("answer: ", answer);
       shelf.db.run(
         `UPDATE books SET progress=${answer} WHERE isbn='${book.isbn}'`,
         (err: Error | null) => {
@@ -120,6 +119,14 @@ const readingLoop = async (book: Book) => {
           }
         }
       );
+      if (book.progress === book.pages) {
+        shelf.db.run(
+          `UPDATE books SET status='${status.finished}' WHERE isbn='${book.isbn}'`,
+          (err: Error | null) => {
+            if (err) console.log(error(`ERROR updatng book progress: `, err));
+          }
+        );
+      }
     } else if (prompt.name === "bookmark" && answers.action === "bookmark") {
       shelf.db.run(
         `INSERT INTO notes (isbn, page, content) VALUES (${book.isbn}, ${answer}, "")`,
