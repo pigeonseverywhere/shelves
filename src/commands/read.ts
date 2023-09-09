@@ -11,7 +11,6 @@ import {
 } from "../context.js";
 import { formatBook, getReadingProgress } from "./utility.js";
 import chalk from "chalk";
-import * as readline from "readline";
 
 export const read = async (title: string) => {
   shelf.db.all(
@@ -55,7 +54,6 @@ export const read = async (title: string) => {
       }
     }
   );
-  console.log();
 };
 
 const readingLoop = async (book: Book) => {
@@ -72,7 +70,8 @@ const readingLoop = async (book: Book) => {
       ],
     },
     {
-      type: (prev, values) => (values.action === "progress" ? "number" : null),
+      type: (_prev: any, values: any) =>
+        values.action === "progress" ? "number" : null,
       name: "progress",
       message: "Current page number: ",
       validate: (progress) =>
@@ -82,18 +81,19 @@ const readingLoop = async (book: Book) => {
       format: (value) => (book.progress = value),
     },
     {
-      type: (prev, values) =>
+      type: (_prev: any, values: any) =>
         values.action === "bookmark" || values.action === "note"
           ? "number"
           : null,
       name: "bookmark",
-      message: (prev, values) =>
+      message: (_prev: any, values: any) =>
         values.action === "bookmark"
           ? "Enter page number to bookmark"
           : "Enter page number of note (if applicable)",
     },
     {
-      type: (prev, values) => (values.action === "note" ? "text" : null),
+      type: (_prev: any, values: any) =>
+        values.action === "note" ? "text" : null,
       name: "note",
       message: "Enter notes",
     },
@@ -162,16 +162,16 @@ const executeStartReading = async (book: Book) => {
       inactive: "no",
     },
     {
-      type: (prev) => (prev ? "number" : null),
+      type: (prev: boolean) => (prev ? "number" : null),
       name: "pages",
       message: "Total pages: ",
     },
     {
-      type: (_prev, values) => (values.track ? "number" : null),
+      type: (_prev: any, values: any) => (values.track ? "number" : null),
       name: "progress",
       initial: 0,
       message: "Enter start page: ",
-      validate: (value) => {
+      validate: (value: number) => {
         return value < book.pages
           ? true
           : "Start page must be lower than total pages in the book!";
@@ -193,7 +193,7 @@ const executeStartReading = async (book: Book) => {
   } progress=${response.track ? response.progress : 0} WHERE isbn='${
     book.isbn
   }'`;
-  shelf.db.exec(sql, (err) => {
+  shelf.db.exec(sql, (err: Error | null) => {
     if (err) {
       console.log(error(`ERROR starting book ${book.title}:`, err));
     } else {

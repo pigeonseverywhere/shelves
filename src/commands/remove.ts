@@ -2,14 +2,6 @@ import prompts, { Choice, PromptObject } from "prompts";
 import { shelf } from "../Shelf.js";
 import { Book, error, success, warning } from "../context.js";
 
-const questions: PromptObject<string>[] = [
-  {
-    type: "autocomplete",
-    name: "search",
-    message: "Find book by title, author or isbn",
-  },
-];
-
 const executeRemove = (select: { isbn: string; title: string }) => {
   shelf.db.run(`DELETE from books WHERE isbn = ?`, select.isbn, (err) => {
     if (err) {
@@ -36,7 +28,7 @@ const search = async (err: Error | null, rows: Book[]) => {
       const toRemove = await prompts({
         type: "select",
         name: "book",
-        message: "Select the book to start reading",
+        message: "Select the book to remove",
         choices: results,
       });
 

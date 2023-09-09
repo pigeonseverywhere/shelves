@@ -12,7 +12,7 @@ Shelves is a command line utility to help you manage your books. Use it to:
 
 If you have the NodeJS runtime installed in your system, you can install the package via:
 ```bash
-npm i shelves-cli
+npm install -g shelves-cli
 ```
 Then you can use it with the keyword `shelf`. See the commands section for examples.
 

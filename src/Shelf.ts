@@ -64,22 +64,22 @@ export class Shelf {
     `;
 
     this.db.serialize(() => {
-      this.db.run(books_sql, (err) => {
+      this.db.run(books_sql, (err: Error | null) => {
         if (err) {
           console.log(error("ERROR creating books table: ", err));
         }
       });
-      this.db.run(notes_sql, (err) => {
+      this.db.run(notes_sql, (err: Error | null) => {
         if (err) {
           console.log(error("ERROR creating notes table: ", err));
         }
       });
-      this.db.run(tags_sql, (err) => {
+      this.db.run(tags_sql, (err: Error | null) => {
         if (err) {
           console.log(error("ERROR creating tags table: ", err));
         }
       });
-      this.db.run(book_tags_sql, (err) => {
+      this.db.run(book_tags_sql, (err: Error | null) => {
         if (err) {
           console.log(error("ERROR creating book tags table: ", err));
         }

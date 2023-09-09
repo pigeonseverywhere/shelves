@@ -19,7 +19,6 @@ program.command("add").description("adds a new book to your shelf").action(add);
 
 // TODO
 // include tags in filter
-// add verbose option
 program
   .command("list")
   .description("list all books in your shelf")
@@ -31,7 +30,6 @@ program
   .option("-f, --filter", "filter books by options")
   .action((options) => list(options));
 
-// TODO EVEYRHTING
 program
   .command("update")
   .argument(
@@ -50,7 +48,6 @@ program
   .description("remove a book from your shelf")
   .action((title) => remove(title));
 
-// TODO
 program
   .command("view")
   .argument(
@@ -83,7 +80,7 @@ program
   .action((label) => {
     shelf.db.run(`INSERT INTO tags (label) VALUES ('${label}')`, (err) => {
       if (err) {
-        console.log(error("ERROR: ", err));
+        console.log(error("ERROR creating new tag: ", err));
       } else {
         console.log(success(`Successfully created new tag '${label}'!`));
       }
@@ -93,4 +90,3 @@ program
 program.parse();
 const options = program.opts();
 
-// shelf.db.close();

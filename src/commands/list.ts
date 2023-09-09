@@ -56,14 +56,14 @@ const authorFilter: PromptObject<string> = {
   type: "text",
   name: "author",
   message: "Enter author name (partial name is OK)",
-  format: (val) => `author LIKE '%${val}%'`,
+  format: (val: string) => `author LIKE '%${val}%'`,
 };
 
 const titleFilter: PromptObject<string> = {
   type: "text",
   name: "title",
   message: "Enter title/keywords",
-  format: (val) => `title LIKE '%${val}%'`,
+  format: (val: string) => `title LIKE '%${val}%'`,
 };
 
 const questions: PromptObject<string> = {

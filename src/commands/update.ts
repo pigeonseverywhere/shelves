@@ -12,13 +12,11 @@ import {
   warning,
 } from "../context.js";
 import { formatBook } from "./utility.js";
-import { createSourceMapSource } from "typescript";
-
 
 export const update = (title: string) => {
   shelf.db.all(
     `SELECT * from books where title LIKE '%${title}%'`,
-    async (err: Error, rows: Book[]) => {
+    async (err: Error | null, rows: Book[]) => {
       if (err) {
         console.log(
           error(`ERROR finding book with ${title} in your shelf: `, err)
@@ -71,32 +69,32 @@ const executeUpdate = async (book: Book) => {
       ],
     },
     {
-      type: (prev, values) => {
+      type: (_prev: any, values: any) => {
         return values.properties.includes("title") ? "text" : null;
       },
       name: "title",
       message: "Update title to",
     },
     {
-      type: (prev, values) => {
+      type: (_prev: any, values: any) => {
         return values.properties.includes("author") ? "text" : null;
       },
       name: "author",
       message: "Update author to",
     },
     {
-      type: (prev, values) => {
+      type: (_prev, values: any) => {
         return values.properties.includes("isbn") ? "text" : null;
       },
       name: "isbn",
       message: "Update ISBN to",
-      validate: (isbn) =>
+      validate: (isbn: string) =>
         isbn.match(/\d{13}/) || isbn.match(/^$/)
           ? true
           : "The ISBN should be 13 digits long",
     },
     {
-      type: (prev, values) => {
+      type: (_prev: any, values: any) => {
         return values.properties.includes("status") ? "select" : null;
       },
       name: "status",
@@ -108,14 +106,14 @@ const executeUpdate = async (book: Book) => {
       ],
     },
     {
-      type: (prev, values) => {
+      type: (_prev: any, values: any) => {
         return values.properties.includes("pages") ? "number" : null;
       },
       name: "pages",
       message: "Update total pages of book to",
     },
     {
-      type: (prev, values) => {
+      type: (_prev: any, values: any) => {
         return values.properties.includes("progress") ? "number" : null;
       },
       name: "progress",
@@ -123,7 +121,6 @@ const executeUpdate = async (book: Book) => {
     },
   ];
   const response = await prompts(update);
-  // TODO if isbn updated, check if isbn already in db
 
   // make sql query
   let columns: string[] = [];
@@ -138,7 +135,7 @@ const executeUpdate = async (book: Book) => {
   const sql = `UPDATE books SET ${columns.join(", ")} WHERE isbn=${
     book.isbn
   } RETURNING *`;
-  shelf.db.get(sql, (err: Error, row: Book) => {
+  shelf.db.get(sql, (err: Error | null, row: Book) => {
     console.log("");
     if (err) {
       console.log(error(`ERROR updateing ${book.title}: `, err));

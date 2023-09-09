@@ -12,7 +12,7 @@ type options = {
 export const view = async (title: string, options: options) => {
   shelf.db.all(
     `SELECT * from books where title LIKE '%${title}%'`,
-    async (err: Error, rows: Book[]) => {
+    async (err: Error | null, rows: Book[]) => {
       if (err) {
         console.log(
           error(`ERROR finding book with ${title} in your shelf: `, err)
@@ -75,8 +75,6 @@ const verboseOutput = (book: Book) => {
 
 const executeView = async (book: Book, verbose: boolean) => {
   const readingProgress = getReadingProgress();
-  // readingProgress.start(book.pages, book.progress);
-
   const displayText = `
   ${chalk.bold.white("TITLE:")}    ${chalk.italic(book.title)}
   ${chalk.bold.white("AUTHOR:")}   ${chalk.italic(book.author)}

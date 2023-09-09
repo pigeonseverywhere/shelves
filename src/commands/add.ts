@@ -30,7 +30,7 @@ const questions: PromptObject<string>[] = [
     name: "isbn",
     message: "Enter the ISBN",
     initial: "",
-    validate: (isbn) =>
+    validate: (isbn: string) =>
       isbn.match(/\d{13}/) || isbn.match(/^$/)
         ? true
         : "The ISBN should be 13 digits long",
