@@ -1,6 +1,55 @@
 import chalk from 'chalk';
 import path from "path";
 
+/*============================ COMMANDS ==============================*/
+export enum commands {
+  add = "add", 
+  list = "list", 
+  read = "read", 
+  remove ="remove", 
+  update = "update", 
+  view = "view"
+} 
+
+export const options: {command:commands, flags: string[], arguments: string[], description: string}[] = [
+  {
+    command: commands.add,
+    flags: [],
+    arguments: [],
+    description: "",
+  },
+  {
+    command: commands.list,
+    flags: [],
+    arguments: [],
+    description: "",
+  },
+  {
+    command: commands.read,
+    flags: [],
+    arguments: ["title"],
+    description: "",
+  },
+  {
+    command: commands.remove,
+    flags: [],
+    arguments: ["title"],
+    description: "",
+  },
+  {
+    command: commands.update,
+    flags: [],
+    arguments: ["title"],
+    description: "",
+  },
+  {
+    command: commands.view,
+    flags: ["--verbose"],
+    arguments: ["title"],
+    description: "",
+  }
+]
+
 /*============================ STYLING ==============================*/
 export const error = chalk.bold.red;
 export const warning = chalk.yellow; // Orange color

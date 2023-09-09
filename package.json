@@ -1,6 +1,6 @@
 {
   "name": "shelves-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A command line book tracker to make your reading life easier",
   "main": "./src/index.ts",
   "type": "module",
@@ -41,15 +41,13 @@
     "inquirer": "^9.2.10",
     "nanospinner": "^1.1.0",
     "prompts": "^2.4.2",
-    "sqlite3": "^5.1.6",
-    "yargs": "^17.7.2"
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
     "@types/node": "^20.4.9",
     "@types/prompts": "^2.4.4",
     "@types/sqlite3": "^3.1.8",
-    "@types/yargs": "^17.0.24",
     "nodemon": "^3.0.1",
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
