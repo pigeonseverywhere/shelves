@@ -1,7 +1,5 @@
 #!/usr/bin/env npx ts-node --esm
 
-import prompts from "prompts";
-import type { PromptObject} from "prompts";
 import { program } from "commander";
 import { add } from "./commands/add.js";
 import { list } from "./commands/list.js";

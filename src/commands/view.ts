@@ -4,7 +4,6 @@ import { Book, Note, error, status, warning } from "../context.js";
 import { formatBook, formatStatus, getReadingProgress } from "./utility.js";
 import chalk from "chalk";
 import boxen from "boxen";
-import cliProgress from "cli-progress";
 
 type options = {
   verbose: boolean;

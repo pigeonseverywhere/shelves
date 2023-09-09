@@ -1,11 +1,11 @@
 {
-  "name": "shelves",
+  "name": "shelves-cli",
   "version": "1.0.0",
   "description": "A command line book tracker to make your reading life easier",
   "main": "./src/index.ts",
   "type": "module",
   "bin": {
-    "shelf": "./src/index.ts"
+    "shelves": "./src/index.ts"
   },
   "scripts": {
     "test": "node test.js",
@@ -21,7 +21,9 @@
     "tracker",
     "book",
     "list",
-    "reading"
+    "reading",
+    "cli",
+    "productivity"
   ],
   "author": "Yunshu Dai",
   "license": "ISC",
@@ -52,5 +54,13 @@
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
+  },
+  "pkg": {
+    "targets": [
+      "node14-linux-x64",
+      "node14-macos-x64",
+      "node14-win-x64"
+    ],
+    "outputPath": "release"
   }
 }

@@ -1,7 +1,6 @@
 import prompts, { Choice, PromptObject } from "prompts";
 import { shelf } from "../Shelf.js";
 import { Book, error, success, warning } from "../context.js";
-import chalk from "chalk";
 
 const questions: PromptObject<string>[] = [
   {
