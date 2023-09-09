@@ -1,18 +1,21 @@
 {
   "name": "shelves-cli",
-  "version": "1.0.3",
+  "version": "1.0.9",
   "description": "A command line book tracker to make your reading life easier",
-  "main": "./src/index.ts",
+  "main": "./build/index.js",
   "type": "module",
   "bin": {
-    "shelves": "./src/index.ts"
+    "shelves": "./build/index.js"
   },
   "scripts": {
     "test": "node test.js",
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.ts"
+    "start": "npm run build && node build/index.js",
+    "prepublishOnly": "npm run build"
+
   },
+  "files": ["build","README.md", "package.json"],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/pigeonseverywhere/shelves.git"

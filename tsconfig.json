@@ -21,9 +21,5 @@
     "noImplicitAny": true,                               
     "skipLibCheck": true,                                 
   },
-    "include": ["src/**/*", "typings"],
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types/"
-    ]
+    "include": ["src/**/*", "typings"]
 }
