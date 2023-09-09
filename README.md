@@ -24,11 +24,8 @@ brew tap pigeonseverywhere/shelves
 brew install shelves
 ```
 
-
-
 ## Uninstalling 
-
-
+TODO
 
 ## Commands 
 
@@ -43,20 +40,23 @@ brew install shelves
 
 ### add
 
-
-### remove
+![shelf_add](https://github.com/pigeonseverywhere/shelves/assets/67492876/88dd7972-6080-48a0-aab5-2f11e0c2722f)
 
 
 ### list
 
+![shelves_list](https://github.com/pigeonseverywhere/shelves/assets/67492876/0faab806-6015-4bcc-a1dc-600105b182a7)
 
 
 ### read
+![shelf_read](https://github.com/pigeonseverywhere/shelves/assets/67492876/63c05bc0-b79c-4b3e-8c31-445d6e20dff2)
 
-
-
-### view 
-
-
+### view
+![shelf_view](https://github.com/pigeonseverywhere/shelves/assets/67492876/67a9fa84-c14d-4958-96ad-16748794a28d)
 
 When using the verbose flag:
+![shelf_view_verbose](https://github.com/pigeonseverywhere/shelves/assets/67492876/cc11fccf-822b-47fb-84f2-b29b716c05b2)
+
+### update
+
+### remove
