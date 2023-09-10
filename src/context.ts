@@ -1,6 +1,8 @@
 import chalk from 'chalk';
 import path from "path";
 
+export const version = "v1.0.9";
+
 /*============================ COMMANDS ==============================*/
 export enum commands {
   add = "add", 
