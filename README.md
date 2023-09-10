@@ -1,5 +1,7 @@
 # shelves
 
+[![npm version](https://badge.fury.io/js/shelves-cli.svg)](https://badge.fury.io/js/shelves-cli)
+
 Shelves is a command line utility to help you manage your books. Use it to:
 - keep track what books you want to read
 - where you're up to in a book
