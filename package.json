@@ -1,6 +1,6 @@
 {
   "name": "shelves-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A command line book tracker to make your reading life easier",
   "main": "./build/index.js",
   "type": "module",
@@ -12,6 +12,7 @@
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
+    "package": "pkg . --targets node14-macos-x64 --output shelves",
     "prepublishOnly": "npm run build"
 
   },
@@ -57,11 +58,6 @@
     "typescript": "^5.1.6"
   },
   "pkg": {
-    "targets": [
-      "node14-linux-x64",
-      "node14-macos-x64",
-      "node14-win-x64"
-    ],
-    "outputPath": "release"
+    "scripts": "build/*.js"
   }
 }

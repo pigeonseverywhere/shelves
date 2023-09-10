@@ -12,7 +12,7 @@ import { read } from "./commands/read.js";
 
 shelf.createTables();
 
-program.option("-v, --version").option("-h, --help").version("v1.0.10");
+program.option("-v, --version").option("-h, --help").version("v1.0.11");
 
 // TODO add tagging
 program.command("add").description("adds a new book to your shelf").action(add);
