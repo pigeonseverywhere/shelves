@@ -1,19 +1,25 @@
 import chalk from 'chalk';
 import path from "path";
+import os from "os";
 
 export const version = "v1.0.9";
 
 /*============================ COMMANDS ==============================*/
 export enum commands {
-  add = "add", 
-  list = "list", 
-  read = "read", 
-  remove ="remove", 
-  update = "update", 
-  view = "view"
-} 
+  add = "add",
+  list = "list",
+  read = "read",
+  remove = "remove",
+  update = "update",
+  view = "view",
+}
 
-export const options: {command:commands, flags: string[], arguments: string[], description: string}[] = [
+export const options: {
+  command: commands;
+  flags: string[];
+  arguments: string[];
+  description: string;
+}[] = [
   {
     command: commands.add,
     flags: [],
@@ -49,8 +55,8 @@ export const options: {command:commands, flags: string[], arguments: string[], d
     flags: ["--verbose"],
     arguments: ["title"],
     description: "",
-  }
-]
+  },
+];
 
 /*============================ STYLING ==============================*/
 export const error = chalk.bold.red;
@@ -88,14 +94,14 @@ export type Book = {
   review: string;
 };
 
-
 export type Note = {
   isbn: string;
   page: number;
   content: string;
 };
 
-
 /*============================ SYSTEM ==============================*/
-export const root_dir = path.dirname(import.meta.url);
-export const db_path = root_dir + "/shelves.db";
+// const root_dir = path.dirname(import.meta.url);
+const home_dir = os.homedir();
+
+export const db_path = home_dir + "/shelves.db";
